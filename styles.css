@@ -135,13 +135,8 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
-    overflow-x: hidden !important;
+    overflow-x: hidden;
     /* Previne scroll horizontal global */
-    max-width: 100vw;
-    position: relative;
-    /* Desabilita bounce horizontal no iOS */
-    overscroll-behavior-x: none;
-    -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -153,14 +148,9 @@ body {
     background-color: var(--black);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden !important;
+    overflow-x: hidden;
     /* Reforço para prevenir scroll horizontal */
     width: 100%;
-    max-width: 100vw;
-    position: relative;
-    /* Desabilita bounce horizontal no iOS */
-    overscroll-behavior-x: none;
-    -webkit-overflow-scrolling: touch;
 }
 
 a {
@@ -247,43 +237,6 @@ select {
 
 .section {
     padding: var(--space-20) 0;
-    overflow-x: hidden;
-    max-width: 100vw;
-    position: relative;
-}
-
-/* Previne overflow em todos os elementos */
-* {
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* Força box-sizing em elementos principais */
-.hero__container,
-.solutions__grid,
-.features__list,
-.benefits__grid,
-.management__container,
-.financing-hero,
-.financing-why,
-.solution-card,
-.feature,
-.benefit,
-.financing-why__card {
-    box-sizing: border-box !important;
-}
-
-.container,
-.hero,
-.solutions,
-.features,
-.benefits,
-.management,
-.financing,
-.cta,
-.footer {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
 }
 
 .text--primary {
@@ -629,12 +582,9 @@ select {
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 100vw;
     padding: var(--space-4) 0;
     background: transparent;
     z-index: 1000;
-    overflow-x: hidden;
-    box-sizing: border-box;
 }
 
 .nav {
@@ -652,7 +602,6 @@ select {
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-full);
-    box-sizing: border-box;
 }
 
 @media screen and (max-width: 768px) {
@@ -666,21 +615,15 @@ select {
         top: 0;
         left: 0;
         width: 100%;
-        max-width: 100vw !important;
         z-index: 9999;
-        overflow-x: hidden !important;
-        box-sizing: border-box;
     }
 
     .nav {
         height: 50px;
         width: 92%;
-        max-width: 92vw;
         /* Largura um pouco menor que 100% para dar margem */
         margin: 0 auto;
         padding: 0 var(--space-3);
-        overflow-x: hidden !important;
-        box-sizing: border-box;
     }
 
     .logo__image {
@@ -1634,9 +1577,7 @@ select {
     mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 12.5%, rgb(0, 0, 0) 87.5%, rgba(0, 0, 0, 0) 100%);
     -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 12.5%, rgb(0, 0, 0) 87.5%, rgba(0, 0, 0, 0) 100%);
     overflow: hidden;
-    overflow-x: hidden !important;
     position: relative;
-    box-sizing: border-box;
 }
 
 .partners-carousel__track {
@@ -1917,27 +1858,51 @@ select {
         --space-16: 2rem;
     }
 
-    /* IMPORTANTE: Previne scroll horizontal no mobile */
+    /* ============================================
+       PREVINE SCROLL HORIZONTAL - MOBILE APENAS
+       ============================================ */
     html,
     body {
         overflow-x: hidden !important;
         max-width: 100vw !important;
         width: 100% !important;
+        position: relative;
+        overscroll-behavior-x: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Força todos os elementos principais a não ultrapassar a tela */
+    * {
+        max-width: 100vw !important;
+        box-sizing: border-box;
+    }
+
+    .header,
+    .nav,
+    .main,
+    .section,
+    .container,
+    .hero,
+    .solutions,
+    .features,
+    .benefits,
+    .management,
+    .financing,
+    .cta,
+    .footer {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+        width: 100% !important;
+        position: relative;
+        box-sizing: border-box;
     }
 
     .container {
         padding: 0 var(--space-4);
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-        width: 100% !important;
-        box-sizing: border-box;
     }
 
     .section {
         padding: var(--space-12) 0;
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-        width: 100% !important;
     }
 
     /* Previne overflow em grids */
