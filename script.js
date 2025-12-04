@@ -3,6 +3,24 @@
    Script otimizado para o design da DotPay
    ============================================ */
 
+// Barra de carregamento
+const loadingBar = document.getElementById('loading-bar');
+if (loadingBar) {
+    loadingBar.style.width = '30%';
+
+    window.addEventListener('load', () => {
+        loadingBar.style.width = '100%';
+        setTimeout(() => {
+            loadingBar.style.opacity = '0';
+            setTimeout(() => loadingBar.remove(), 300);
+        }, 200);
+    });
+
+    // Progresso simulado
+    setTimeout(() => { if (loadingBar) loadingBar.style.width = '50%'; }, 300);
+    setTimeout(() => { if (loadingBar) loadingBar.style.width = '70%'; }, 600);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
     /* ============================================
@@ -165,7 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
        ============================================ */
     const heroVisual = document.querySelector('.hero__visual');
 
-    if (heroVisual) {
+    // Só ativa parallax em telas maiores que 768px para melhor performance
+    if (heroVisual && window.innerWidth > 768) {
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const rate = scrolled * 0.3;
@@ -181,55 +200,58 @@ document.addEventListener('DOMContentLoaded', function () {
        Garante carregamento correto das imagens
        ============================================ */
     function fixSafariImages() {
-        // Detecta Safari
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const criticalImages = document.querySelectorAll('.card__image, .management__image, .financing-hero__image');
 
-        if (isSafari) {
-            const criticalImages = document.querySelectorAll('.card__image, .management__image, .financing-hero__image');
+        criticalImages.forEach(img => {
+            // Força exibição imediata
+            img.style.opacity = '1';
+            img.style.visibility = 'visible';
+            img.style.display = 'block';
 
-            criticalImages.forEach(img => {
-                // Força o reflow da imagem
-                if (img.complete && img.naturalHeight !== 0) {
-                    img.style.opacity = '1';
-                    img.style.visibility = 'visible';
-                } else {
-                    // Se a imagem não carregou, força o reload
-                    img.addEventListener('load', function() {
-                        this.style.opacity = '1';
-                        this.style.visibility = 'visible';
-                    });
-
-                    img.addEventListener('error', function() {
-                        console.warn('Erro ao carregar imagem:', this.src);
-                        // Tenta recarregar a imagem
-                        const src = this.src;
-                        this.src = '';
-                        setTimeout(() => {
-                            this.src = src;
-                        }, 100);
-                    });
-                }
-            });
-        }
-    }
-
-    // Executa a correção quando as imagens devem estar carregadas
-    if (document.readyState === 'complete') {
-        fixSafariImages();
-    } else {
-        window.addEventListener('load', fixSafariImages);
-    }
-
-    // Força renderização após um pequeno delay (fallback)
-    setTimeout(() => {
-        const allImages = document.querySelectorAll('img');
-        allImages.forEach(img => {
-            if (img.complete) {
+            // Se a imagem já carregou
+            if (img.complete && img.naturalHeight !== 0) {
                 img.style.opacity = '1';
-                img.style.visibility = 'visible';
+            } else {
+                // Listener de load
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                    this.style.visibility = 'visible';
+                    this.style.display = 'block';
+                });
+
+                // Listener de erro com retry
+                img.addEventListener('error', function() {
+                    console.warn('Erro ao carregar imagem:', this.src);
+                    const src = this.src;
+                    this.src = '';
+                    setTimeout(() => {
+                        this.src = src;
+                    }, 100);
+                });
             }
         });
-    }, 500);
+    }
+
+    // Executa imediatamente
+    fixSafariImages();
+
+    // Executa novamente no DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', fixSafariImages);
+
+    // Executa no load completo
+    window.addEventListener('load', fixSafariImages);
+
+    // Força renderização múltiplas vezes (fallback agressivo)
+    [100, 300, 500, 1000].forEach(delay => {
+        setTimeout(() => {
+            const allImages = document.querySelectorAll('img');
+            allImages.forEach(img => {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+                img.style.display = 'block';
+            });
+        }, delay);
+    });
 
     /* ============================================
        CONSOLE LOG

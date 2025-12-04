@@ -6,11 +6,16 @@
          META TAGS E CONFIGURAÇÕES BÁSICAS
          ============================================ -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="description"
         content="DotPay - Plataforma completa de pagamentos. Simplifique seus pagamentos e acelere suas vendas.">
     <meta name="keywords" content="pagamentos, fintech, pix, cartão, boleto, gestão financeira, dotpay">
     <meta name="author" content="DotPay">
+
+    <!-- Meta tags para Safari iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
 
     <!-- ============================================
          TÍTULO DA PÁGINA
@@ -52,6 +57,9 @@
 </head>
 
 <body>
+
+    <!-- Loading indicator -->
+    <div id="loading-bar" style="position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, #10B981, #14C48F); z-index: 99999; transition: width 0.3s ease;"></div>
 
     <!-- ============================================
          HEADER / NAVEGAÇÃO PRINCIPAL
@@ -156,7 +164,7 @@
                 <!-- Ilustração do hero -->
                 <div class="hero__visual">
                     <div class="hero__card">
-                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image" loading="eager" decoding="async">
+                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image" loading="eager" decoding="async" width="550" height="350">
                     </div>
                 </div>
             </div>
@@ -337,7 +345,7 @@
                 <div class="management__container">
                     <!-- Lado Esquerdo: Dashboard Visual -->
                     <div class="management__visual">
-                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image" loading="lazy" decoding="async">
+                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image" loading="lazy" decoding="async" width="350" height="700">
                     </div>
 
                     <!-- Lado Direito: Conteúdo -->
@@ -401,7 +409,7 @@
                             <i class="ph ph-percent"></i>
                             <span>Taxas competitivas</span>
                         </div>
-                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image" loading="lazy" decoding="async">
+                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image" loading="lazy" decoding="async" width="400" height="800">
                     </div>
                 </div>
             </div>
