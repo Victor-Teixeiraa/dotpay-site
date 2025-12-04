@@ -177,6 +177,61 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ============================================
+       FIX PARA IMAGENS NO SAFARI
+       Garante carregamento correto das imagens
+       ============================================ */
+    function fixSafariImages() {
+        // Detecta Safari
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        if (isSafari) {
+            const criticalImages = document.querySelectorAll('.card__image, .management__image, .financing-hero__image');
+
+            criticalImages.forEach(img => {
+                // Força o reflow da imagem
+                if (img.complete && img.naturalHeight !== 0) {
+                    img.style.opacity = '1';
+                    img.style.visibility = 'visible';
+                } else {
+                    // Se a imagem não carregou, força o reload
+                    img.addEventListener('load', function() {
+                        this.style.opacity = '1';
+                        this.style.visibility = 'visible';
+                    });
+
+                    img.addEventListener('error', function() {
+                        console.warn('Erro ao carregar imagem:', this.src);
+                        // Tenta recarregar a imagem
+                        const src = this.src;
+                        this.src = '';
+                        setTimeout(() => {
+                            this.src = src;
+                        }, 100);
+                    });
+                }
+            });
+        }
+    }
+
+    // Executa a correção quando as imagens devem estar carregadas
+    if (document.readyState === 'complete') {
+        fixSafariImages();
+    } else {
+        window.addEventListener('load', fixSafariImages);
+    }
+
+    // Força renderização após um pequeno delay (fallback)
+    setTimeout(() => {
+        const allImages = document.querySelectorAll('img');
+        allImages.forEach(img => {
+            if (img.complete) {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+            }
+        });
+    }, 500);
+
+    /* ============================================
        CONSOLE LOG
        Easter egg para desenvolvedores
        ============================================ */

@@ -18,6 +18,13 @@
     <title>DotPay - Plataforma Completa de Pagamentos</title>
 
     <!-- ============================================
+         FAVICON
+         ============================================ -->
+    <link rel="icon" type="image/x-icon" href="images/logo dottech branca.jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo dottech branca.jpg">
+    <link rel="apple-touch-icon" href="images/logo dottech branca.jpg">
+
+    <!-- ============================================
          FONTES EXTERNAS - Google Fonts
          ============================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +37,13 @@
          ÍCONES - Phosphor Icons
          ============================================ -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- ============================================
+         PRELOAD DE IMAGENS CRÍTICAS
+         Carrega imagens importantes primeiro
+         ============================================ -->
+    <link rel="preload" as="image" href="images/card_dotpay.png" fetchpriority="high">
+    <link rel="preload" as="image" href="images/fundo_card.png" fetchpriority="high">
 
     <!-- ============================================
          CSS CUSTOMIZADO
@@ -142,7 +156,7 @@
                 <!-- Ilustração do hero -->
                 <div class="hero__visual">
                     <div class="hero__card">
-                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image">
+                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image" loading="eager" decoding="async">
                     </div>
                 </div>
             </div>
@@ -323,7 +337,7 @@
                 <div class="management__container">
                     <!-- Lado Esquerdo: Dashboard Visual -->
                     <div class="management__visual">
-                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image">
+                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image" loading="lazy" decoding="async">
                     </div>
 
                     <!-- Lado Direito: Conteúdo -->
@@ -387,7 +401,7 @@
                             <i class="ph ph-percent"></i>
                             <span>Taxas competitivas</span>
                         </div>
-                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image">
+                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>

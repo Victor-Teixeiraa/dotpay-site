@@ -163,6 +163,29 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+/* Fix para Safari mobile - previne problemas com imagens */
+@supports (-webkit-touch-callout: none) {
+    img {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        perspective: 1000;
+    }
+
+    .card__image,
+    .management__image,
+    .financing-hero__image {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
 }
 
 ul {
@@ -688,8 +711,11 @@ select {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: scroll;
     position: relative;
     min-height: auto;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .hero::before {
@@ -806,7 +832,14 @@ select {
     position: relative;
     z-index: 2;
     filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 100px rgba(16, 185, 129, 0.2));
+    -webkit-filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 100px rgba(16, 185, 129, 0.2));
     animation: float 6s ease-in-out infinite;
+    -webkit-animation: float 6s ease-in-out infinite;
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 @media screen and (min-width: 1400px) {
@@ -832,6 +865,20 @@ select {
     }
 
     50% {
+        transform: translateY(-20px) rotate(-3deg);
+    }
+}
+
+@-webkit-keyframes float {
+
+    0%,
+    100% {
+        -webkit-transform: translateY(0px) rotate(-5deg);
+        transform: translateY(0px) rotate(-5deg);
+    }
+
+    50% {
+        -webkit-transform: translateY(-20px) rotate(-3deg);
         transform: translateY(-20px) rotate(-3deg);
     }
 }
@@ -1088,6 +1135,12 @@ select {
     max-width: 350px;
     height: auto;
     filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
+    -webkit-filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 /* Conteúdo - Lado Direito */
@@ -1204,9 +1257,16 @@ select {
     max-width: 400px;
     height: auto;
     filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
+    -webkit-filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
     animation: float 6s ease-in-out infinite;
+    -webkit-animation: float 6s ease-in-out infinite;
     position: relative;
     z-index: 1;
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 /* Badges flutuantes */
@@ -1561,8 +1621,11 @@ select {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: scroll;
     color: var(--white);
     position: relative;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .cta::before {
@@ -2136,5 +2199,50 @@ select {
         overflow-wrap: break-word;
         word-wrap: break-word;
         hyphens: auto;
+    }
+}
+
+/* ============================================
+   FIXES ESPECÍFICOS PARA SAFARI iOS
+   Otimizações para renderização de imagens
+   ============================================ */
+@media screen and (max-width: 768px) {
+    /* Safari iOS - Force hardware acceleration */
+    @supports (-webkit-touch-callout: none) {
+        .hero__visual,
+        .management__visual,
+        .financing-hero__visual {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .hero__card {
+            -webkit-perspective: 1000px;
+            perspective: 1000px;
+        }
+
+        .card__image,
+        .management__image,
+        .financing-hero__image {
+            /* Força renderização via GPU */
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            /* Remove blur que pode causar problemas */
+            -webkit-font-smoothing: antialiased;
+            /* Garante que a imagem seja renderizada */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Desabilita animações complexas no Safari iOS se necessário */
+        @media (prefers-reduced-motion: reduce) {
+            .card__image,
+            .financing-hero__image {
+                animation: none;
+                -webkit-animation: none;
+            }
+        }
     }
 }
