@@ -177,6 +177,7 @@ img {
     0% {
         background-position: -200% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
@@ -1885,13 +1886,7 @@ select {
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Força todos os elementos principais a não ultrapassar a tela */
-    * {
-        max-width: 100vw !important;
-        box-sizing: border-box;
-    }
-
-    /* Remove qualquer overflow ou scroll interno */
+    /* Previne overflow horizontal sem forçar max-width universal */
     .header,
     .nav,
     .main,
@@ -1905,19 +1900,12 @@ select {
     .financing,
     .cta,
     .footer {
-        overflow: visible !important;
-        overflow-x: hidden !important;
-        overflow-y: visible !important;
-        max-width: 100vw !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: unset !important;
-        max-height: none !important;
-        position: relative !important;
+        overflow-x: hidden;
+        width: 100%;
         box-sizing: border-box;
     }
 
-    /* Garante que todos os containers internos também não criem scroll */
+    /* Garante que todos os containers internos não criem scroll horizontal */
     .hero__container,
     .solutions__container,
     .features__container,
@@ -1926,11 +1914,8 @@ select {
     .financing__container,
     .cta__container,
     .footer__container {
-        overflow: visible !important;
-        overflow-y: visible !important;
-        height: auto !important;
-        min-height: unset !important;
-        max-height: none !important;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .container {
@@ -1941,7 +1926,7 @@ select {
         padding: var(--space-12) 0;
     }
 
-    /* Previne overflow em grids */
+    /* Previne overflow em grids e containers */
     .hero__container,
     .solutions__grid,
     .features__list,
@@ -1957,14 +1942,7 @@ select {
     .management__visual,
     .financing-hero__content,
     .financing-hero__visual {
-        overflow: visible !important;
-        overflow-x: hidden !important;
-        overflow-y: visible !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: unset !important;
-        max-height: none !important;
+        width: 100%;
         box-sizing: border-box;
     }
 
@@ -2052,16 +2030,24 @@ select {
         max-height: none;
     }
 
-    /* Força todos os divs e sections a não terem scroll próprio */
-    div, section, article, main {
-        overflow-y: visible !important;
-        min-height: unset !important;
-        max-height: none !important;
+    /* Ajusta pseudo-elemento para não causar overflow */
+    .hero__visual::before {
+        width: 100%;
+        height: 100%;
     }
 
-    /* Exceção apenas para o menu mobile */
+    /* Exceções: apenas html e menu podem ter scroll vertical */
+    html {
+        overflow-y: scroll !important;
+    }
+
+    body {
+        overflow-y: visible !important;
+    }
+
     .nav__menu {
         overflow-y: auto !important;
+        overflow-x: hidden !important;
     }
 
     .hero__title {
@@ -2358,6 +2344,7 @@ select {
    Otimizações para renderização de imagens
    ============================================ */
 @media screen and (max-width: 768px) {
+
     /* Desabilita filtros pesados no mobile para melhor performance */
     .card__image,
     .management__image,
@@ -2396,6 +2383,7 @@ select {
 
     /* Safari iOS - Force hardware acceleration */
     @supports (-webkit-touch-callout: none) {
+
         .hero__visual,
         .management__visual,
         .financing-hero__visual {
@@ -2434,11 +2422,6 @@ select {
     }
 
     /* FORÇA remoção de scroll horizontal - Safari iOS */
-    * {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-    }
-
     body,
     html,
     .header,
@@ -2446,9 +2429,135 @@ select {
     .main,
     .section,
     .container {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-        width: 100% !important;
+        overflow-x: hidden;
+        width: 100%;
         position: relative;
+    }
+}
+
+/* ============================================
+   DOTTECH BRANDING
+   Seção de branding da DotTech no rodapé
+   ============================================ */
+.linkbio-dottech {
+    margin-top: var(--space-8);
+    padding: var(--space-4) var(--space-6);
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dottech-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.dottech-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.dottech-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.dottech-label {
+    font-size: 0.75rem;
+    color: #4B5563;
+    font-weight: 500;
+}
+
+.dottech-name {
+    font-size: var(--text-base);
+    color: #111827;
+    font-weight: 700;
+}
+
+.dottech-cta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+.dottech-question {
+    font-size: var(--text-sm);
+    color: #4B5563;
+    font-weight: 500;
+}
+
+.dottech-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.5rem;
+    background: #111827;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: var(--transition-base);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dottech-button:hover {
+    transform: translateY(-2px);
+    background: #1F2937;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Tablet e Desktop */
+@media screen and (min-width: 769px) {
+    .linkbio-dottech {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding: var(--space-4) var(--space-8);
+    }
+
+    .dottech-cta {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-3);
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+    .linkbio-dottech {
+        padding: var(--space-3) var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .dottech-logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    .dottech-name {
+        font-size: var(--text-sm);
+    }
+
+    .dottech-question {
+        font-size: 0.8125rem;
+    }
+
+    .dottech-button {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.8125rem;
     }
 }
