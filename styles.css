@@ -1859,13 +1859,27 @@ select {
     }
 
     /* ============================================
-       PREVINE SCROLL HORIZONTAL - MOBILE APENAS
+       SCROLL ÚNICO - MOBILE APENAS
+       Remove qualquer scroll interno das seções
        ============================================ */
-    html,
-    body {
+    html {
         overflow-x: hidden !important;
+        overflow-y: auto !important;
         max-width: 100vw !important;
         width: 100% !important;
+        height: 100% !important;
+        position: relative;
+        overscroll-behavior-x: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        max-width: 100vw !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh !important;
         position: relative;
         overscroll-behavior-x: none;
         -webkit-overflow-scrolling: touch;
@@ -1877,6 +1891,7 @@ select {
         box-sizing: border-box;
     }
 
+    /* Remove qualquer overflow ou scroll interno */
     .header,
     .nav,
     .main,
@@ -1890,10 +1905,13 @@ select {
     .financing,
     .cta,
     .footer {
+        overflow: visible !important;
         overflow-x: hidden !important;
+        overflow-y: visible !important;
         max-width: 100vw !important;
         width: 100% !important;
-        position: relative;
+        height: auto !important;
+        position: relative !important;
         box-sizing: border-box;
     }
 
