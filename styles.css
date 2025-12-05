@@ -139,6 +139,17 @@ html {
     /* Previne scroll horizontal global */
 }
 
+/* Smooth scroll mais suave para todos os navegadores */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    * {
+        scroll-behavior: smooth;
+    }
+}
+
 body {
     font-family: var(--font-primary);
     font-size: var(--text-base);
@@ -262,8 +273,10 @@ select {
 .cta__content,
 .stat {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
 .hero__content,
@@ -293,13 +306,15 @@ select {
     transform: translateY(0);
 }
 
-/* Animações especiais para diferentes elementos */
+/* Animações especiais para diferentes elementos com easing suave */
 .hero__content {
-    transition-duration: 0.8s;
+    transition-duration: 1s;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero__visual {
-    transition-duration: 1s;
+    transition-duration: 1.2s;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .solution-card,
@@ -307,7 +322,46 @@ select {
 .benefit,
 .financing-step,
 .stat {
-    transition-duration: 0.5s;
+    transition-duration: 0.7s;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Animação de entrada lateral para elementos alternados */
+.management__visual {
+    opacity: 0;
+    transform: translateX(-50px) translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.management__content {
+    opacity: 0;
+    transform: translateX(50px) translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.management__visual.animate-in,
+.management__content.animate-in {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+}
+
+/* Animação de scale suave para cards */
+.solution-card,
+.benefit,
+.financing-why__card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.solution-card.animate-in,
+.benefit.animate-in,
+.financing-why__card.animate-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 /* Glow Blobs - Efeitos de brilho de fundo */
@@ -1277,11 +1331,8 @@ select {
     height: auto;
     filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
     -webkit-filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.3)) drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
-    animation: float 6s ease-in-out infinite;
-    -webkit-animation: float 6s ease-in-out infinite;
     position: relative;
     z-index: 1;
-    will-change: transform;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
@@ -1313,13 +1364,13 @@ select {
 }
 
 .financing-badge--1 {
-    top: 10%;
-    right: 10%;
+    top: 20%;
+    right: -25%;
 }
 
 .financing-badge--2 {
-    bottom: 15%;
-    left: 5%;
+    bottom: 25%;
+    left: -28%;
     animation-delay: 1s;
 }
 
@@ -1821,6 +1872,16 @@ select {
         max-width: 350px;
     }
 
+    .financing-badge--1 {
+        top: 12%;
+        right: -8%;
+    }
+
+    .financing-badge--2 {
+        bottom: 18%;
+        left: -8%;
+    }
+
     .financing-ideal {
         grid-template-columns: 1fr;
         gap: var(--space-12);
@@ -2117,8 +2178,7 @@ select {
     }
 
     .financing-badge {
-        font-size: var(--text-xs);
-        padding: var(--space-2) var(--space-4);
+        display: none;
     }
 
     .financing-ideal__title {

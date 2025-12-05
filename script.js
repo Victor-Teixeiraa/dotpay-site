@@ -79,9 +79,34 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', scrollActive);
 
     /* ============================================
-       SMOOTH SCROLL
-       Rolagem suave ao clicar nos links
+       SMOOTH SCROLL APRIMORADO
+       Rolagem suave com easing customizado
        ============================================ */
+
+    // Função de easing customizada
+    function smoothScrollTo(targetPosition, duration = 1000) {
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
+
+        function animation(currentTime) {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+
+            // Easing function (ease-out-cubic)
+            const ease = 1 - Math.pow(1 - progress, 3);
+
+            window.scrollTo(0, startPosition + distance * ease);
+
+            if (timeElapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        }
+
+        requestAnimationFrame(animation);
+    }
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
@@ -95,10 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const headerHeight = 80;
                 const targetPosition = targetElement.offsetTop - headerHeight;
 
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                // Usar smooth scroll customizado
+                smoothScrollTo(targetPosition, 800);
             }
         });
     });
@@ -129,22 +152,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ============================================
-       SCROLL REVEAL ANIMATIONS
-       Animações quando elementos entram na viewport
+       SCROLL REVEAL ANIMATIONS APRIMORADO
+       Animações suaves quando elementos entram na viewport
        ============================================ */
 
-    // Configuração do Intersection Observer
+    // Configuração otimizada do Intersection Observer
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -80px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                // Opcional: parar de observar após animar
-                // observer.unobserve(entry.target);
+                // Adiciona animação com pequeno delay para suavidade
+                setTimeout(() => {
+                    entry.target.classList.add('animate-in');
+                }, 50);
+
+                // Desativa observação após animar (melhor performance)
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -165,35 +192,71 @@ document.addEventListener('DOMContentLoaded', function () {
         .stat
     `);
 
-    // Observar cada elemento
+    // Observar cada elemento com delay escalonado
     animatedElements.forEach((el, index) => {
         // Adicionar delay escalonado para cards em grid
         if (el.classList.contains('solution-card') ||
-            el.classList.contains('feature') ||
             el.classList.contains('benefit') ||
-            el.classList.contains('financing-step') ||
-            el.classList.contains('stat')) {
-            el.style.transitionDelay = `${(index % 6) * 0.1}s`;
+            el.classList.contains('financing-why__card')) {
+            // Encontrar índice dentro do container pai
+            const parent = el.parentElement;
+            const siblings = Array.from(parent.children).filter(child =>
+                child.classList.contains('solution-card') ||
+                child.classList.contains('benefit') ||
+                child.classList.contains('financing-why__card')
+            );
+            const siblingIndex = siblings.indexOf(el);
+            el.style.transitionDelay = `${siblingIndex * 0.08}s`;
+        } else if (el.classList.contains('feature') || el.classList.contains('stat')) {
+            const parent = el.parentElement;
+            const siblings = Array.from(parent.children).filter(child =>
+                child.classList.contains('feature') || child.classList.contains('stat')
+            );
+            const siblingIndex = siblings.indexOf(el);
+            el.style.transitionDelay = `${siblingIndex * 0.1}s`;
         }
+
         observer.observe(el);
     });
 
     /* ============================================
-       PARALLAX SUAVE NO HERO
+       ANIMAÇÃO PROGRESSIVA AO ROLAR
+       Suaviza ainda mais a experiência de scroll
        ============================================ */
-    const heroVisual = document.querySelector('.hero__visual');
+    let ticking = false;
 
-    // Só ativa parallax em telas maiores que 768px para melhor performance
-    if (heroVisual && window.innerWidth > 768) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * 0.3;
+    function updateAnimations() {
+        const scrolled = window.pageYOffset;
+        const windowHeight = window.innerHeight;
 
-            if (scrolled < 800) { // Limitar o efeito
-                heroVisual.style.transform = `translateY(${rate}px)`;
-            }
-        });
+        // Efeito parallax suave em elementos específicos
+        if (window.innerWidth > 768) {
+            const parallaxElements = document.querySelectorAll('.hero__visual, .management__image');
+
+            parallaxElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = elementTop < windowHeight;
+
+                if (elementVisible && elementTop > -el.offsetHeight) {
+                    const scrollPercent = (windowHeight - elementTop) / (windowHeight + el.offsetHeight);
+                    const translateY = scrollPercent * 30;
+
+                    el.style.transform = `translateY(${translateY}px)`;
+                }
+            });
+        }
+
+        ticking = false;
     }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(updateAnimations);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
 
     /* ============================================
        FIX PARA IMAGENS NO SAFARI
