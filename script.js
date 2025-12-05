@@ -317,6 +317,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /* ============================================
+       FIX ADICIONAL PARA SAFARI iOS
+       Previne bugs de rendering e overflow
+       ============================================ */
+    function fixSafariIOS() {
+        // Detecta Safari iOS
+        const isSafariIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        if (isSafariIOS) {
+            // Fix para viewport height
+            const setVH = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
+
+            // Force repaint para prevenir bugs de rendering
+            setTimeout(() => {
+                document.body.style.display = 'none';
+                document.body.offsetHeight;
+                document.body.style.display = '';
+            }, 100);
+        }
+    }
+
+    fixSafariIOS();
+
+    /* ============================================
        CONSOLE LOG
        Easter egg para desenvolvedores
        ============================================ */
