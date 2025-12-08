@@ -27,29 +27,85 @@ document.addEventListener('DOMContentLoaded', function () {
        MENU MOBILE
        Abre e fecha o menu em dispositivos móveis
        ============================================ */
-    const navMenu = document.getElementById('nav-menu');
+    /* ============================================
+       MENU MOBILE (Dual Architecture Refactor)
+       ============================================ */
     const navToggle = document.getElementById('nav-toggle');
-    const navClose = document.getElementById('nav-close');
-    const navLinks = document.querySelectorAll('.nav__link');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const mobileClose = document.getElementById('mobile-close');
+    const mobileLinks = document.querySelectorAll('.mobile-nav__link');
+
+    // Função para abrir menu
+    function openMenu(e) {
+        if (e && e.cancelable) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        if (mobileMenu) {
+            mobileMenu.classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            if (mobileOverlay) {
+                mobileOverlay.classList.add('show');
+            }
+
+            // ESCONDER O BOTÃO TOGGLE ENQUANTO O MENU ESTÁ ABERTO
+            if (navToggle) {
+                navToggle.style.opacity = '0';
+                navToggle.style.visibility = 'hidden';
+            }
+        }
+    }
+
+    // Função para fechar menu
+    function closeMenu(e) {
+        if (mobileMenu) {
+            mobileMenu.classList.remove('show');
+            document.body.style.overflow = '';
+
+            if (mobileOverlay) {
+                mobileOverlay.classList.remove('show');
+            }
+
+            // MOSTRAR O BOTÃO TOGGLE NOVAMENTE
+            if (navToggle) {
+                navToggle.style.opacity = '1';
+                navToggle.style.visibility = 'visible';
+            }
+        }
+    }
+
+    // Handler para botão fechar
+    function handleCloseButton(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+    }
 
     // Abre o menu
     if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.add('show');
-        });
+        navToggle.addEventListener('click', openMenu);
+        navToggle.addEventListener('touchstart', openMenu, { passive: false });
     }
 
-    // Fecha o menu
-    if (navClose) {
-        navClose.addEventListener('click', () => {
-            navMenu.classList.remove('show');
-        });
+    // Fecha o menu (Botão X)
+    if (mobileClose) {
+        mobileClose.addEventListener('click', handleCloseButton);
+        mobileClose.addEventListener('touchstart', handleCloseButton, { passive: false });
     }
 
-    // Fecha o menu ao clicar em um link
-    navLinks.forEach(link => {
+    // Fecha o menu (Overlay)
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', handleCloseButton);
+        mobileOverlay.addEventListener('touchstart', handleCloseButton, { passive: false });
+    }
+
+    // Fecha o menu ao clicar em um link (Permite navegação)
+    mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            navMenu.classList.remove('show');
+            closeMenu();
         });
     });
 
@@ -84,47 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
        ============================================ */
 
     // Função de easing customizada
-    function smoothScrollTo(targetPosition, duration = 1000) {
-        const startPosition = window.pageYOffset;
-        const distance = targetPosition - startPosition;
-        let startTime = null;
-
-        function animation(currentTime) {
-            if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-
-            // Easing function (ease-out-cubic)
-            const ease = 1 - Math.pow(1 - progress, 3);
-
-            window.scrollTo(0, startPosition + distance * ease);
-
-            if (timeElapsed < duration) {
-                requestAnimationFrame(animation);
-            }
-        }
-
-        requestAnimationFrame(animation);
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-
-            if (targetId === '#' || !targetId) return;
-
-            e.preventDefault();
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                const headerHeight = 80;
-                const targetPosition = targetElement.offsetTop - headerHeight;
-
-                // Usar smooth scroll customizado
-                smoothScrollTo(targetPosition, 800);
-            }
-        });
-    });
+    // Remover smoothScrollTo e listeners manuais pois usaremos CSS scroll-behavior: smooth
+    // Isso garante que o navegador gerencie a navegação nativamente sem conflitos
 
     /* ============================================
        BOTÃO "VER COMO FUNCIONA"
@@ -154,74 +171,109 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ============================================
        SCROLL REVEAL ANIMATIONS APRIMORADO
        Animações suaves quando elementos entram na viewport
+       DESABILITADO NO MOBILE
        ============================================ */
 
     // Configuração otimizada do Intersection Observer
-    const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
-    };
+    const isMobile = window.innerWidth <= 768;
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Adiciona animação com pequeno delay para suavidade
-                setTimeout(() => {
+    // Apenas ativa animações em desktop
+    if (!isMobile) {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Animação imediata
                     entry.target.classList.add('animate-in');
-                }, 50);
 
-                // Desativa observação após animar (melhor performance)
-                observer.unobserve(entry.target);
+                    // Remove will-change após animação completar (economia de GPU)
+                    setTimeout(() => {
+                        entry.target.style.willChange = 'auto';
+                    }, 450);
+
+                    // Desativa observação após animar (melhor performance)
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Elementos a serem animados
+        const animatedElements = document.querySelectorAll(`
+            .section__header,
+            .solution-card,
+            .feature,
+            .benefit,
+            .management__visual,
+            .management__content,
+            .financing-hero__content,
+            .financing-hero__visual,
+            .financing-ideal,
+            .financing-why__card,
+            .cta__content,
+            .stat
+        `);
+
+        // Observar cada elemento com delay escalonado
+        animatedElements.forEach((el, index) => {
+            const cardDelay = 0.08;
+            const itemDelay = 0.1;
+
+            // Adicionar delay escalonado para cards em grid
+            if (el.classList.contains('solution-card') ||
+                el.classList.contains('benefit') ||
+                el.classList.contains('financing-why__card')) {
+                // Encontrar índice dentro do container pai
+                const parent = el.parentElement;
+                const siblings = Array.from(parent.children).filter(child =>
+                    child.classList.contains('solution-card') ||
+                    child.classList.contains('benefit') ||
+                    child.classList.contains('financing-why__card')
+                );
+                const siblingIndex = siblings.indexOf(el);
+                el.style.transitionDelay = `${siblingIndex * cardDelay}s`;
+            } else if (el.classList.contains('feature') || el.classList.contains('stat')) {
+                const parent = el.parentElement;
+                const siblings = Array.from(parent.children).filter(child =>
+                    child.classList.contains('feature') || child.classList.contains('stat')
+                );
+                const siblingIndex = siblings.indexOf(el);
+                el.style.transitionDelay = `${siblingIndex * itemDelay}s`;
             }
+
+            observer.observe(el);
         });
-    }, observerOptions);
+    } else {
+        // No mobile, adiciona animate-in imediatamente para todos os elementos
+        const animatedElements = document.querySelectorAll(`
+            .section__header,
+            .solution-card,
+            .feature,
+            .benefit,
+            .management__visual,
+            .management__content,
+            .financing-hero__content,
+            .financing-hero__visual,
+            .financing-ideal,
+            .financing-why__card,
+            .cta__content,
+            .stat
+        `);
 
-    // Elementos a serem animados
-    const animatedElements = document.querySelectorAll(`
-        .section__header,
-        .solution-card,
-        .feature,
-        .benefit,
-        .management__visual,
-        .management__content,
-        .financing-hero__content,
-        .financing-hero__visual,
-        .financing-ideal,
-        .financing-why__card,
-        .cta__content,
-        .stat
-    `);
-
-    // Observar cada elemento com delay escalonado
-    animatedElements.forEach((el, index) => {
-        // Adicionar delay escalonado para cards em grid
-        if (el.classList.contains('solution-card') ||
-            el.classList.contains('benefit') ||
-            el.classList.contains('financing-why__card')) {
-            // Encontrar índice dentro do container pai
-            const parent = el.parentElement;
-            const siblings = Array.from(parent.children).filter(child =>
-                child.classList.contains('solution-card') ||
-                child.classList.contains('benefit') ||
-                child.classList.contains('financing-why__card')
-            );
-            const siblingIndex = siblings.indexOf(el);
-            el.style.transitionDelay = `${siblingIndex * 0.08}s`;
-        } else if (el.classList.contains('feature') || el.classList.contains('stat')) {
-            const parent = el.parentElement;
-            const siblings = Array.from(parent.children).filter(child =>
-                child.classList.contains('feature') || child.classList.contains('stat')
-            );
-            const siblingIndex = siblings.indexOf(el);
-            el.style.transitionDelay = `${siblingIndex * 0.1}s`;
-        }
-
-        observer.observe(el);
-    });
+        animatedElements.forEach(el => {
+            el.classList.add('animate-in');
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+    }
 
     /* ============================================
        ANIMAÇÃO PROGRESSIVA AO ROLAR
        Suaviza ainda mais a experiência de scroll
+       DESABILITADO NO MOBILE
        ============================================ */
     let ticking = false;
 
@@ -229,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const scrolled = window.pageYOffset;
         const windowHeight = window.innerHeight;
 
-        // Efeito parallax suave em elementos específicos
+        // Efeito parallax suave apenas em desktop (desabilitado no mobile)
         if (window.innerWidth > 768) {
             const parallaxElements = document.querySelectorAll('.hero__visual, .management__image');
 
@@ -244,6 +296,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     el.style.transform = `translateY(${translateY}px)`;
                 }
             });
+        } else {
+            // No mobile, remove qualquer transform aplicado
+            const parallaxElements = document.querySelectorAll('.hero__visual, .management__image');
+            parallaxElements.forEach(el => {
+                el.style.transform = 'none';
+            });
         }
 
         ticking = false;
@@ -256,14 +314,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    window.addEventListener('scroll', requestTick, { passive: true });
+    // Apenas adiciona o listener de scroll em desktop
+    if (window.innerWidth > 768) {
+        window.addEventListener('scroll', requestTick, { passive: true });
+    }
 
     /* ============================================
        FIX PARA IMAGENS NO SAFARI
        Garante carregamento correto das imagens
        ============================================ */
     function fixSafariImages() {
-        const criticalImages = document.querySelectorAll('.card__image, .management__image, .financing-hero__image');
+        const criticalImages = document.querySelectorAll('.card__image, .management__image, .financing-hero__image, .partners-carousel__item img');
 
         criticalImages.forEach(img => {
             // Força exibição imediata
@@ -276,14 +337,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 img.style.opacity = '1';
             } else {
                 // Listener de load
-                img.addEventListener('load', function() {
+                img.addEventListener('load', function () {
                     this.style.opacity = '1';
                     this.style.visibility = 'visible';
                     this.style.display = 'block';
                 });
 
                 // Listener de erro com retry
-                img.addEventListener('error', function() {
+                img.addEventListener('error', function () {
                     console.warn('Erro ao carregar imagem:', this.src);
                     const src = this.src;
                     this.src = '';

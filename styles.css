@@ -201,6 +201,7 @@ img[src]:not([src=""]) {
 
 /* Fix para Safari mobile - previne problemas com imagens */
 @supports (-webkit-touch-callout: none) {
+
     /* Fix para Safari iOS */
     html {
         -webkit-text-size-adjust: 100%;
@@ -293,8 +294,32 @@ select {
     opacity: 0;
     transform: translateY(50px);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
+}
+
+/* Previne overflow durante animações */
+.section {
+    overflow-x: clip;
+    overflow-y: visible;
+    contain: layout;
+}
+
+/* Garante que elementos animados não causem overflow */
+.section__header,
+.solution-card,
+.feature,
+.benefit,
+.management__visual,
+.management__content,
+.financing-hero__content,
+.financing-hero__visual,
+.financing-ideal,
+.financing-why__card,
+.cta__content,
+.stat {
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .hero__content,
@@ -349,14 +374,14 @@ select {
     opacity: 0;
     transform: translateX(-50px) translateY(20px);
     transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .management__content {
     opacity: 0;
     transform: translateX(50px) translateY(20px);
     transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .management__visual.animate-in,
@@ -372,7 +397,7 @@ select {
     opacity: 0;
     transform: translateY(40px) scale(0.95);
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .solution-card.animate-in,
@@ -380,6 +405,53 @@ select {
 .financing-why__card.animate-in {
     opacity: 1;
     transform: translateY(0) scale(1);
+}
+
+/* ============================================
+   DESABILITAR ANIMAÇÕES NO MOBILE
+   Remove todas as animações de scroll em telas menores
+   ============================================ */
+@media screen and (max-width: 768px) {
+
+    /* Remove todas as transições e transformações */
+    .section__header,
+    .solution-card,
+    .feature,
+    .benefit,
+    .management__visual,
+    .management__content,
+    .financing-hero__content,
+    .financing-hero__visual,
+    .financing-ideal,
+    .financing-why__card,
+    .cta__content,
+    .stat,
+    .hero__content,
+    .hero__visual {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        will-change: auto !important;
+        animation: none !important;
+        transition-delay: 0s !important;
+    }
+
+    /* Garante que tudo está visível imediatamente */
+    .section__header.animate-in,
+    .solution-card.animate-in,
+    .feature.animate-in,
+    .benefit.animate-in,
+    .management__visual.animate-in,
+    .management__content.animate-in,
+    .financing-hero__content.animate-in,
+    .financing-hero__visual.animate-in,
+    .financing-ideal.animate-in,
+    .financing-why__card.animate-in,
+    .cta__content.animate-in,
+    .stat.animate-in {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 /* Glow Blobs - Efeitos de brilho de fundo */
@@ -692,24 +764,89 @@ select {
     }
 
     .nav {
-        height: 50px;
-        width: 92%;
-        /* Largura um pouco menor que 100% para dar margem */
+        height: 60px;
+        width: 95%;
         margin: 0 auto;
-        padding: 0 var(--space-3);
+        padding: 0 var(--space-4);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav__logo {
+        flex-shrink: 0;
+        min-width: auto;
+    }
+
+    .logo__link {
+        gap: var(--space-2);
+        /* Reduz gap entre logo e texto no mobile */
     }
 
     .logo__image {
-        height: 28px;
+        display: none !important;
+        /* Oculta logo no mobile */
     }
 
     .logo__text {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
+        white-space: nowrap;
+        line-height: 1;
+        font-weight: 700;
+    }
+
+    .nav__actions {
+        gap: var(--space-2);
+        flex-shrink: 0;
     }
 
     .button--primary {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1.15rem;
         font-size: 0.8rem;
+        white-space: nowrap;
+        line-height: 1;
+        font-weight: 600;
+    }
+
+    .button--primary i {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile extra pequeno - ajustes adicionais */
+@media screen and (max-width: 400px) {
+    .nav {
+        height: 48px;
+        width: 96%;
+        padding: 0 var(--space-2);
+    }
+
+    .logo__image {
+        height: 18px;
+    }
+
+    .logo__text {
+        font-size: 0.95rem;
+    }
+
+    .button--primary {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.75rem;
+    }
+
+    .button--primary i {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile muito pequeno - oculta texto da logo */
+@media screen and (max-width: 340px) {
+    .logo__text {
+        display: none;
+    }
+
+    .logo__image {
+        height: 16px;
     }
 }
 
@@ -729,9 +866,10 @@ select {
     height: 40px;
     width: auto;
     display: block;
-    mix-blend-mode: screen;
-    /* Remove fundo preto se houver */
     object-fit: contain;
+    background: transparent;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .logo__text {
@@ -789,6 +927,15 @@ select {
     font-size: 1.5rem;
     color: var(--gray-600);
     cursor: pointer;
+    -webkit-tap-highlight-color: rgba(16, 185, 129, 0.2);
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* Default para Desktop: Esconder o menu mobile */
+.mobile-menu-container {
+    display: none;
 }
 
 /* ============================================
@@ -1951,6 +2098,8 @@ select {
         position: relative;
         overscroll-behavior-x: none;
         -webkit-overflow-scrolling: touch;
+        scroll-padding-top: 80px;
+        scroll-behavior: smooth;
     }
 
     body {
@@ -1979,7 +2128,8 @@ select {
     .financing,
     .cta,
     .footer {
-        overflow-x: hidden;
+        overflow-x: clip;
+        overflow-y: visible;
         width: 100%;
         box-sizing: border-box;
     }
@@ -2003,6 +2153,10 @@ select {
 
     .section {
         padding: var(--space-12) 0;
+        overflow-x: clip !important;
+        overflow-y: visible !important;
+        contain: layout style;
+        isolation: isolate;
     }
 
     /* Previne overflow em grids e containers */
@@ -2023,6 +2177,19 @@ select {
     .financing-hero__visual {
         width: 100%;
         box-sizing: border-box;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    /* Garante que elementos animados não excedam seus containers durante animações */
+    .solution-card,
+    .feature,
+    .benefit,
+    .financing-why__card,
+    .stat {
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     /* Força dimensões das imagens para evitar layout shift */
@@ -2041,7 +2208,37 @@ select {
         object-fit: contain !important;
     }
 
-    .nav__menu {
+    /* Sem animações em mobile - elementos sempre visíveis */
+    .management__visual,
+    .management__content,
+    .section__header,
+    .solution-card,
+    .feature,
+    .benefit,
+    .financing-hero__content,
+    .financing-hero__visual,
+    .financing-ideal,
+    .financing-why__card,
+    .cta__content,
+    .stat {
+        opacity: 1 !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+        transition: none !important;
+        will-change: auto !important;
+    }
+
+    /* ============================================
+       MOBILE MENU REFACTOR
+       ============================================ */
+
+    /* Esconder menu desktop no mobile */
+    #desktop-menu {
+        display: none !important;
+    }
+
+    /* Estilos do Menu Mobile (Body-level) */
+    .mobile-nav {
         position: fixed;
         top: 0;
         right: -100%;
@@ -2051,56 +2248,97 @@ select {
         background: rgba(10, 10, 10, 0.95);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        padding: var(--space-20) var(--space-6);
+        padding: var(--space-8);
         box-shadow: var(--shadow-2xl);
-        transition: var(--transition-base);
-        z-index: 99999;
+        transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 2147483647;
+        /* Max Z-Index seguro */
         border-left: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        visibility: hidden;
+        /* Começa invisível */
     }
 
-    .nav__menu.show {
+    .mobile-nav.show {
         right: 0;
+        visibility: visible;
     }
 
-    .nav__actions {
+    .mobile-nav__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-4);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-nav__logo {
+        color: var(--white);
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .mobile-nav__list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        width: 100%;
+    }
+
+    .mobile-nav__link {
+        color: #FFFFFF !important;
+        font-size: 1.25rem;
+        /* Tamanho legível */
+        font-weight: 500;
+        display: block;
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Overlay Body-level */
+    #mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 2147483646;
+        /* Logo abaixo do menu */
+        backdrop-filter: blur(4px);
+    }
+
+    #mobile-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Botões dentro do mobile menu */
+    #mobile-close {
+        color: var(--white);
+        font-size: 1.5rem;
+        cursor: pointer;
         display: flex;
         align-items: center;
-        gap: var(--space-4);
-    }
-
-    .nav__actions .button--primary {
-        display: flex;
-        /* Garante que o botão apareça */
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-    }
-
-    .nav__list {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-6);
-    }
-
-    .nav__link {
-        color: var(--white) !important;
-        font-size: var(--text-xl);
-        font-weight: 600;
-    }
-
-    .nav__close {
-        display: block;
-        position: absolute;
-        top: var(--space-6);
-        right: var(--space-6);
-        color: var(--white);
+        justify-content: center;
+        width: 40px;
+        height: 40px;
     }
 
     .nav__toggle {
         display: block;
         color: var(--white);
-        z-index: 10000;
-        position: relative;
+        font-size: 1.5rem;
+        z-index: 1000;
+        /* Alto, mas menor que o overlay/menu */
+        cursor: pointer;
     }
+
 
     .hero {
         padding-top: calc(var(--header-height) + var(--space-6));
@@ -2153,6 +2391,27 @@ select {
 
     .footer__content {
         grid-template-columns: 1fr;
+    }
+
+    .footer__brand {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .footer__logo {
+        display: none !important;
+        /* Oculta logo no footer mobile */
+    }
+
+    .footer__logo-text {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    .footer__description {
+        text-align: center;
+        max-width: 100%;
+        font-size: 0.9rem;
     }
 
     .management__container {
@@ -2260,16 +2519,28 @@ select {
     .partners-carousel {
         height: 110px;
         padding: 15px 0;
+        -webkit-overflow-scrolling: touch;
     }
 
     .partners-carousel__item {
         width: 130px;
         height: 65px;
+        background: rgba(16, 185, 129, 0.08) !important;
+        border: 1px solid rgba(16, 185, 129, 0.15) !important;
+    }
+
+    .partners-carousel__item img {
+        filter: brightness(0) invert(1) opacity(0.8) !important;
+        -webkit-filter: brightness(0) invert(1) opacity(0.8) !important;
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain !important;
     }
 
     .partners-carousel__track {
         gap: var(--space-8);
         animation: scroll-partners 15s linear infinite;
+        -webkit-animation: scroll-partners 15s linear infinite;
     }
 }
 
@@ -2371,6 +2642,13 @@ select {
     .partners-carousel__item {
         width: 120px;
         height: 60px;
+        background: rgba(16, 185, 129, 0.08) !important;
+        border: 1px solid rgba(16, 185, 129, 0.15) !important;
+    }
+
+    .partners-carousel__item img {
+        filter: brightness(0) invert(1) opacity(0.8) !important;
+        -webkit-filter: brightness(0) invert(1) opacity(0.8) !important;
     }
 
     .partners-carousel__track {
@@ -2523,6 +2801,36 @@ select {
         -webkit-overflow-scrolling: touch;
     }
 
+    /* Fix para logo no Safari iOS */
+    .logo__image {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .nav__logo {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    /* Fix para botão toggle */
+    .nav__toggle,
+    .nav__close {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+
+    /* Garante que menu mobile funcione */
+    .nav__menu {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
     /* Previne overflow em cards e elementos */
     .solution-card,
     .feature,
@@ -2565,7 +2873,28 @@ select {
     }
 
     .nav__menu {
-        z-index: 99999 !important;
+        z-index: 999999 !important;
+    }
+
+    /* Fix para logos dos parceiros no Safari iOS */
+    .partners-carousel__item {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    .partners-carousel__item img {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    .partners-carousel__track {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 }
 
@@ -2694,4 +3023,50 @@ select {
         padding: 0.5rem 1.25rem;
         font-size: 0.8125rem;
     }
-}
+}/ *   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  
+       F L O A T I N G   W H A T S A P P   B U T T O N  
+       = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =   * /  
+ . w h a t s a p p - f l o a t   {  
+         p o s i t i o n :   f i x e d ;  
+         b o t t o m :   2 0 p x ;  
+         r i g h t :   2 0 p x ;  
+         z - i n d e x :   9 9 9 9 ;  
+         w i d t h :   6 0 p x ;  
+         h e i g h t :   6 0 p x ;  
+         b a c k g r o u n d - c o l o r :   # 2 5 D 3 6 6 ;  
+         c o l o r :   # F F F ;  
+         b o r d e r - r a d i u s :   5 0 % ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   c e n t e r ;  
+         t e x t - d e c o r a t i o n :   n o n e ;  
+         b o x - s h a d o w :   0   4 p x   1 2 p x   r g b a ( 0 ,   0 ,   0 ,   0 . 3 ) ;  
+         t r a n s i t i o n :   a l l   0 . 3 s   e a s e ;  
+         a n i m a t i o n :   p u l s e - g r e e n   2 s   i n f i n i t e ;  
+ }  
+  
+ . w h a t s a p p - f l o a t   i   {  
+         f o n t - s i z e :   3 2 p x ;  
+         f o n t - w e i g h t :   b o l d ;  
+ }  
+  
+ . w h a t s a p p - f l o a t : h o v e r   {  
+         t r a n s f o r m :   s c a l e ( 1 . 1 ) ;  
+         b a c k g r o u n d - c o l o r :   # 1 2 8 C 7 E ;  
+         b o x - s h a d o w :   0   6 p x   1 6 p x   r g b a ( 0 ,   0 ,   0 ,   0 . 4 ) ;  
+ }  
+  
+ @ k e y f r a m e s   p u l s e - g r e e n   {  
+         0 %   {  
+                 b o x - s h a d o w :   0   0   0   0   r g b a ( 3 7 ,   2 1 1 ,   1 0 2 ,   0 . 7 ) ;  
+         }  
+  
+         7 0 %   {  
+                 b o x - s h a d o w :   0   0   0   1 5 p x   r g b a ( 3 7 ,   2 1 1 ,   1 0 2 ,   0 ) ;  
+         }  
+  
+         1 0 0 %   {  
+                 b o x - s h a d o w :   0   0   0   0   r g b a ( 3 7 ,   2 1 1 ,   1 0 2 ,   0 ) ;  
+         }  
+ }  
+ 

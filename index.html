@@ -6,7 +6,8 @@
          META TAGS E CONFIGURAÇÕES BÁSICAS
          ============================================ -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="description"
         content="DotPay - Plataforma completa de pagamentos. Simplifique seus pagamentos e acelere suas vendas.">
     <meta name="keywords" content="pagamentos, fintech, pix, cartão, boleto, gestão financeira, dotpay">
@@ -60,7 +61,9 @@
 <body>
 
     <!-- Loading indicator -->
-    <div id="loading-bar" style="position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, #10B981, #14C48F); z-index: 99999; transition: width 0.3s ease;"></div>
+    <div id="loading-bar"
+        style="position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, #10B981, #14C48F); z-index: 99999; transition: width 0.3s ease;">
+    </div>
 
     <!-- ============================================
          HEADER / NAVEGAÇÃO PRINCIPAL
@@ -76,8 +79,8 @@
                 </a>
             </div>
 
-            <!-- Menu de navegação -->
-            <div class="nav__menu" id="nav-menu">
+            <!-- Menu Desktop (Visível apenas em telas grandes) -->
+            <div class="nav__menu" id="desktop-menu">
                 <ul class="nav__list">
                     <li class="nav__item">
                         <a href="#inicio" class="nav__link active">Início</a>
@@ -98,12 +101,8 @@
                         <a href="#contato" class="nav__link">Contato</a>
                     </li>
                 </ul>
-
-                <!-- Botão de fechar menu mobile -->
-                <div class="nav__close" id="nav-close">
-                    <i class="ph ph-x"></i>
-                </div>
             </div>
+
 
             <!-- Botão CTA e Toggle Mobile -->
             <div class="nav__actions">
@@ -113,13 +112,11 @@
                     <i class="ph ph-arrow-right"></i>
                 </a>
 
-                <!-- Toggle do menu mobile -->
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="ph ph-list"></i>
-                </div>
             </div>
         </nav>
     </header>
+
+
 
     <!-- ============================================
          MAIN CONTENT
@@ -165,7 +162,8 @@
                 <!-- Ilustração do hero -->
                 <div class="hero__visual">
                     <div class="hero__card">
-                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image" loading="eager" decoding="async" width="550" height="350">
+                        <img src="images/card_dotpay.png" alt="Cartão DotPay" class="card__image" loading="eager"
+                            decoding="async" width="550" height="350">
                     </div>
                 </div>
             </div>
@@ -346,7 +344,8 @@
                 <div class="management__container">
                     <!-- Lado Esquerdo: Dashboard Visual -->
                     <div class="management__visual">
-                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image" loading="lazy" decoding="async" width="350" height="700">
+                        <img src="images/cell_dotpay.png" alt="Dashboard DotPay Mobile" class="management__image"
+                            loading="lazy" decoding="async" width="350" height="700">
                     </div>
 
                     <!-- Lado Direito: Conteúdo -->
@@ -402,7 +401,8 @@
                     </div>
 
                     <div class="financing-hero__visual">
-                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image" loading="lazy" decoding="async" width="400" height="800">
+                        <img src="images/cell_dot2.png" alt="App DotPay - Financiamento" class="financing-hero__image"
+                            loading="lazy" decoding="async" width="400" height="800">
                     </div>
                 </div>
             </div>
@@ -608,7 +608,8 @@
                 </div>
                 <div class="dottech-cta">
                     <span class="dottech-question">Ficou interessado?</span>
-                    <a href="https://wa.me/558592946163?text=Ol%C3%A1%2C%20tudo%20bem%3F%0AGostaria%20de%20fazer%20um%20or%C3%A7amento%20de%20um%20site.%0AVim%20do%20site%20da%20DotPay." target="_blank" rel="noopener noreferrer" class="dottech-button">
+                    <a href="https://wa.me/558592946163?text=Ol%C3%A1%2C%20tudo%20bem%3F%0AGostaria%20de%20fazer%20um%20or%C3%A7amento%20de%20um%20site.%0AVim%20do%20site%20da%20DotPay."
+                        target="_blank" rel="noopener noreferrer" class="dottech-button">
                         Clique aqui
                     </a>
                 </div>
@@ -619,7 +620,42 @@
     <!-- ============================================
          SCRIPTS
          ============================================ -->
+    <!-- ============================================
+         MENU MOBILE (Separado do Header para Z-Index correto)
+         ============================================ -->
+    <div class="mobile-menu-container">
+        <!-- Overlay -->
+        <div class="menu-overlay" id="mobile-overlay"></div>
+
+        <!-- Menu Lateral -->
+        <div class="mobile-nav" id="mobile-menu">
+            <!-- Header do Menu Mobile -->
+            <div class="mobile-nav__header">
+                <span class="mobile-nav__logo">DotPay</span>
+                <div class="nav__close" id="mobile-close">
+                    <i class="ph ph-x"></i>
+                </div>
+            </div>
+
+            <ul class="mobile-nav__list">
+                <li class="mobile-nav__item"><a href="#inicio" class="mobile-nav__link">Início</a></li>
+                <li class="mobile-nav__item"><a href="#solucoes" class="mobile-nav__link">Soluções</a></li>
+                <li class="mobile-nav__item"><a href="#funcionalidades" class="mobile-nav__link">Funcionalidades</a>
+                </li>
+                <li class="mobile-nav__item"><a href="#financiamento" class="mobile-nav__link">Financiamento</a></li>
+                <li class="mobile-nav__item"><a href="#beneficios" class="mobile-nav__link">Benefícios</a></li>
+                <li class="mobile-nav__item"><a href="#contato" class="mobile-nav__link">Contato</a></li>
+            </ul>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/558582256193?text=Ol%C3%A1!%20Gostaria%20de%20abrir%20uma%20conta%20na%20DOTPAY"
+        target="_blank" class="whatsapp-float" aria-label="Fale conosco no WhatsApp">
+        <i class="ph ph-whatsapp-logo"></i>
+    </a>
 
 </body>
 
